@@ -1,0 +1,32 @@
+{
+    "adaptive_target_kl":	false,
+    "batch_size":	128,
+    "beta":	1.0,
+    "cost_limit":	25.0,
+    "device":	"cuda",
+    "device_id":	0,
+    "exp_name":	"SafetyHalfCheetahVelocity-v1-c-trpo-hyst-seed-3000",
+    "experiment":	"ablation",
+    "gamma":	0.99,
+    "headless":	false,
+    "hidden_sizes":	[
+        64,
+        64
+    ],
+    "hyst_frac":	0.8,
+    "lagrangian_multiplier_init":	0.001,
+    "lagrangian_multiplier_lr":	0.035,
+    "learning_iters":	10,
+    "log_dir":	"runs/ablation/SafetyHalfCheetahVelocity-v1/c-trpo-hyst/seed-3000-2024-11-16-15-19-29",
+    "max_grad_norm":	40.0,
+    "num_envs":	10,
+    "positive_cost":	false,
+    "randomize":	false,
+    "seed":	3000,
+    "steps_per_epoch":	20000,
+    "target_kl":	0.01,
+    "task":	"SafetyHalfCheetahVelocity-v1",
+    "total_steps":	10000000,
+    "use_eval":	false,
+    "write_terminal":	true
+}

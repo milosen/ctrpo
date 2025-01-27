@@ -1,0 +1,19 @@
+chardet==5.2.0
+charset-normalizer==3.3.2
+cmasher==1.8.0
+einops==0.7.0
+matplotlib==3.8.2
+moviepy==1.0.3
+mujoco==2.3.3
+numpy==1.22.4
+pandas==2.1.4
+pygame==2.1.0
+safety-gymnasium==1.0.0
+scipy==1.13.1
+seaborn==0.13.0
+tensorboard==2.15.1
+tikzplotlib==0.10.1
+torch==2.0.1
+# for the notebooks
+ipykernel==6.29.5
+rliable==1.2.0 

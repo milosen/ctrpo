@@ -1,0 +1,28 @@
+{
+    "batch_size":	128,
+    "cost_limit":	25.0,
+    "device":	"cuda",
+    "device_id":	0,
+    "exp_name":	"SafetyPointGoal1-v0-pcpo-seed-0",
+    "experiment":	"benchmark",
+    "gamma":	0.99,
+    "headless":	false,
+    "hidden_sizes":	[
+        64,
+        64
+    ],
+    "lagrangian_multiplier_init":	0.001,
+    "lagrangian_multiplier_lr":	0.035,
+    "learning_iters":	10,
+    "log_dir":	"runs/benchmark/SafetyPointGoal1-v0/pcpo/seed-000-2024-09-06-04-51-02",
+    "max_grad_norm":	40.0,
+    "num_envs":	10,
+    "randomize":	false,
+    "seed":	0,
+    "steps_per_epoch":	20000,
+    "target_kl":	0.01,
+    "task":	"SafetyPointGoal1-v0",
+    "total_steps":	10000000,
+    "use_eval":	false,
+    "write_terminal":	true
+}

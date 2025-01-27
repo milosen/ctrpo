@@ -1,0 +1,32 @@
+{
+    "adaptive_target_kl":	false,
+    "batch_size":	256,
+    "beta":	1.0,
+    "cost_limit":	25.0,
+    "device":	"cuda",
+    "device_id":	0,
+    "exp_name":	"SafetyPointPush1-v0-c-trpo-hyst-seed-1000",
+    "experiment":	"ablation",
+    "gamma":	0.99,
+    "headless":	false,
+    "hidden_sizes":	[
+        64,
+        64
+    ],
+    "hyst_frac":	0.8,
+    "lagrangian_multiplier_init":	0.001,
+    "lagrangian_multiplier_lr":	0.035,
+    "learning_iters":	10,
+    "log_dir":	"runs/ablation/SafetyPointPush1-v0/c-trpo-hyst/seed-1000-2024-11-18-12-22-40",
+    "max_grad_norm":	40.0,
+    "num_envs":	10,
+    "positive_cost":	false,
+    "randomize":	false,
+    "seed":	1000,
+    "steps_per_epoch":	20000,
+    "target_kl":	0.01,
+    "task":	"SafetyPointPush1-v0",
+    "total_steps":	10000000,
+    "use_eval":	false,
+    "write_terminal":	true
+}

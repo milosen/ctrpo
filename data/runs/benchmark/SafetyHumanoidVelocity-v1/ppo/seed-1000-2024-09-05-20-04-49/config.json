@@ -1,0 +1,28 @@
+{
+    "batch_size":	64,
+    "cost_limit":	25.0,
+    "device":	"cuda",
+    "device_id":	0,
+    "exp_name":	"SafetyHumanoidVelocity-v1-ppo-seed-1000",
+    "experiment":	"benchmark",
+    "gamma":	0.99,
+    "headless":	false,
+    "hidden_sizes":	[
+        64,
+        64
+    ],
+    "lagrangian_multiplier_init":	0.001,
+    "lagrangian_multiplier_lr":	0.035,
+    "learning_iters":	40,
+    "log_dir":	"runs/benchmark/SafetyHumanoidVelocity-v1/ppo/seed-1000-2024-09-05-20-04-49",
+    "max_grad_norm":	40.0,
+    "num_envs":	10,
+    "randomize":	false,
+    "seed":	1000,
+    "steps_per_epoch":	20000,
+    "target_kl":	0.02,
+    "task":	"SafetyHumanoidVelocity-v1",
+    "total_steps":	10000000,
+    "use_eval":	false,
+    "write_terminal":	true
+}
