@@ -9,7 +9,7 @@ diffculies = ['1', '2']
 vel_robots = ['Ant', 'HalfCheetah', 'Hopper', 'Walker2d', 'Swimmer', 'Humanoid']
 vel_tasks = ['Velocity']
 
-middle_benchmark = ["SafetyAntVelocity-v1", 
+benchmark = ["SafetyAntVelocity-v1", 
                    "SafetyHalfCheetahVelocity-v1",
                    "SafetyHumanoidVelocity-v1",
                    "SafetyHopperVelocity-v1",
@@ -18,31 +18,36 @@ middle_benchmark = ["SafetyAntVelocity-v1",
                    "SafetyRacecarCircle1-v0",
                    "SafetyPointPush1-v0"]
 
-algo_subset = [
+algos = [
             "c-trpo",
             "cpo",
             "pcpo",
-            "ppo_lag",
             "cppo_pid",
+            "ppo_lag",
             "trpo_lag",
-            "ppo"]
+            "focops",
+            "cup",
+            "p3o",
+            "ipo",
+            "ppo"
+]
 
 def parse_args():
     parser = argparse.ArgumentParser()
     parser.add_argument(
         "--tasks",
         nargs="+",
-        default=middle_benchmark,
+        default=benchmark,
         help="the ids of the environment to benchmark",
     )
     parser.add_argument(
         "--algo",
         nargs="+",
-        default=algo_subset,
+        default=algos,
         help="the ids of the algorithm to benchmark",
     )
     parser.add_argument(
-        "--num-seeds", type=int, default=3, help="the number of random seeds"
+        "--num-seeds", type=int, default=5, help="the number of random seeds"
     )
     parser.add_argument(
         "--task_idx", type=int, default=None, help="the task number to run from the flattened task array"
@@ -84,8 +89,6 @@ if __name__ == "__main__":
     device = "cuda" if torch.cuda.is_available() else "cpu"
 
     commands = []
-    
-    
     
     if args.task_idx is not None:
         seeds = [args.start_seed + 1000*seed for seed in range(args.num_seeds)]
