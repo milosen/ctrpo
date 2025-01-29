@@ -8,8 +8,8 @@ using PlotlySave
 ### Standard functions 
 
 # Reward of a policy
-function R(π, α, β, γ, μ, r)
-    τ = π * β  # Observation to state policy
+function R(π, α, ν, γ, μ, r)
+    τ = π * ν  # Observation to state policy
     # Compute the state-state transition
     pπ = [τ[:,s_old]' * α[s_new,s_old,:] for s_new in 1:nS, s_old in 1:nS]
     rπ = diag(r * τ)  # Compute the one step reward
@@ -18,8 +18,8 @@ function R(π, α, β, γ, μ, r)
 end
 
 # State action frequency for a policy
-function stateActionFrequency(π, α, β, γ, μ)
-    τ = β * π
+function stateActionFrequency(π, α, ν, γ, μ)
+    τ = ν * π
     #pπ = [transpose(τ[:,s_old]) * α[s_new,s_old,:] for s_new in 1:nS, s_old in 1:nS]
     #ρ = (I-γ*pπ)\((1-γ)*μ)
     #η = Diagonal(ρ) * transpose(τ)
@@ -40,19 +40,19 @@ function softmaxPolicy(θ)
 end
 
 # Reward and state-action frequencies for the softmax model
-function softmaxReward(θ, α, β, γ, μ, r)
+function softmaxReward(θ, α, ν, γ, μ, r)
     π = softmaxPolicy(θ)
-    return R(π, α, β, γ, μ, r)
+    return R(π, α, ν, γ, μ, r)
 end
 
-function softmaxStateActionFrequency(θ, α, β, γ, μ, r)
+function softmaxStateActionFrequency(θ, α, ν, γ, μ, r)
     π = softmaxPolicy(θ)
-    τ = π * β
+    τ = π * ν
     pπ = [transpose(τ[:,s_old]) * α[s_new,s_old,:] for s_new in 1:nS, s_old in 1:nS]
     ρ = (I-γ*pπ)\((1-γ)*μ)
     η = Diagonal(ρ) * transpose(π)
     return η
-    #return softmaxStateActionFrequency(π, α, β, γ, μ, r)
+    #return softmaxStateActionFrequency(π, α, ν, γ, μ, r)
 end
 
 ### Implementation of C-NPG 
@@ -68,24 +68,24 @@ jacobianLogLikelihoods = θ -> ForwardDiff.jacobian(logLikelihoods, θ)
 
 # Preconditionier of Kakade's NPG 
 function kakadeConditioner(θ)
-    η = reshape(softmaxStateActionFrequency(θ, α, β, γ, μ, r)', nS*nA)
+    η = reshape(softmaxStateActionFrequency(θ, α, ν, γ, μ, r)', nS*nA)
     J = jacobianLogLikelihoods(θ)
     G = [sum(J[:, i].*J[:, j].*η) for i in 1:nP, j in 1:nP]
     return G
 end
 
 # Log state-action frequencies and their Jacobian 
-logLikelihoodsSAF(θ) = log.(softmaxStateActionFrequency(θ, α, β, γ, μ, r))
+logLikelihoodsSAF(θ) = log.(softmaxStateActionFrequency(θ, α, ν, γ, μ, r))
 jacobianLogLikelihoodsSAF = θ -> ForwardDiff.jacobian(logLikelihoodsSAF, θ)
 
 # Preconditionier for C-NPG 
-function C_NPG_Gramian(θ,λ)
+function C_NPG_Gramian(θ,β)
     G = kakadeConditioner(θ)
     J = jacobianLogLikelihoodsSAF(θ)
     H = J' * (vec(c) * vec(c)') * J
     π = softmaxPolicy(θ)
-    V = R(π, α, β, γ, μ, c)
-    return G + λ * d²ϕ(b - V) * H
+    V = R(π, α, ν, γ, μ, c)
+    return G + β * d²ϕ(b - V) * H
 end
 
 ### Run example 
@@ -101,8 +101,8 @@ nP = nO*nA;
 α[:,1,:] = Matrix(I, 2, 2);
 α[:,2,:] = [0 1; 1 0];
 
-# Observation matrix β is the identity, so we are in a fully observable setting 
-β = [1 0; 0 1];  
+# Observation matrix ν is the identity, so we are in a fully observable setting 
+ν = [1 0; 0 1];  
 
 # Reward and discount 
 r = [1. 0.; 2. 0.];
@@ -117,7 +117,7 @@ c = [10. 0.; 100. 1.] / 100;
 b = 0.2;
 
 #Define the parameter policy gradient
-reward(θ) = R(softmaxPolicy(θ), α, β, γ, μ, r);
+reward(θ) = R(softmaxPolicy(θ), α, ν, γ, μ, r);
 ∇R = θ -> ForwardDiff.gradient(reward, θ);
     
 # Compute the optimal reward by computing it for all 4 deterministic policies 
@@ -125,7 +125,7 @@ rewards_det = zeros(2,2);
 for i in 1:2
     for j in 1:2
     π_det = transpose([i-1 2-i; j-1 2-j])
-    rewards_det[i,j] = R(π_det, α, β, γ, μ, r)
+    rewards_det[i,j] = R(π_det, α, ν, γ, μ, r)
     end
 end
 R_opt = maximum(rewards_det);
@@ -139,20 +139,20 @@ z = zeros(n_plot, n_plot);
 for i in 1:n_plot
     for j in 1:n_plot
         π_plot = [x[i] y[j]; 1-x[i] 1-y[j]];
-        z[i, j] = R(π_plot, α, β, γ, μ, r) ;
+        z[i, j] = R(π_plot, α, ν, γ, μ, r) ;
     end
 end
 
-p_heatmap = heatmap(x,y,transpose(z));
+p_heatmap = heatmap(x,y,transpose(z), c = cgrad(:Greys_3, rev=true));
 
 #Define the parameter policy gradient
-reward(θ) = R(softmaxPolicy(θ), α, β, γ, μ, r);
+reward(θ) = R(softmaxPolicy(θ), α, ν, γ, μ, r);
 ∇R = θ -> ForwardDiff.gradient(reward, θ);
 
 # Plot safe policy set 
 function C(x,y)
     π = [x y; 1-x 1-y]
-    return R(π, α, β, γ, μ, c)
+    return R(π, α, ν, γ, μ, c)
 end
 
 x = range(0, 1, length=1000);
@@ -167,9 +167,9 @@ nIterations = 10^4;
 Δt = 10^-2;
 
 # Number of different values for 
-λs = 10. .^ LinRange(-4,0,3);
-λs = append!([0.], λs);
-λs = append!(λs, [2.]);
+βs = 10. .^ LinRange(-4,0,3);
+βs = append!([0.], βs);
+βs = append!(βs, [2.]);
 
 # Optimize using Kakade natural gradient trajectories
 
@@ -178,11 +178,11 @@ nIterations = 10^4;
 for i in 1:nTrajectories
     θ = randn(4)
     π = softmaxPolicy(θ)
-    V = R(π, α, β, γ, μ, c)
+    V = R(π, α, ν, γ, μ, c)
     while V >= b - 0.1
         θ = randn(4)
         π = softmaxPolicy(θ)
-        V = R(π, α, β, γ, μ, c)
+        V = R(π, α, ν, γ, μ, c)
     end
     θ₀[i,:] = θ
 end
@@ -193,7 +193,7 @@ title_fontsize, tick_fontsize, legend_fontsize, guide_fontsize = 18, 14, 14, 14;
 # Run optimization for different sensitivity values and random initializations 
 
 # Iterate of different sensitivities
-for λ in λs
+for β in βs
     # Create plot of the heatmap in policy space 
     p = plot(p_heatmap)
     
@@ -207,8 +207,8 @@ for λ in λs
 
             # Check safety 
             π = softmaxPolicy(θ)
-            V = R(π, α, β, γ, μ, c)
-            if (V > b) && (λ > 0)
+            V = R(π, α, ν, γ, μ, c)
+            if (V > b) && (β > 0)
                 break
             end
 
@@ -216,10 +216,10 @@ for λ in λs
             append!(policyTrajectories_Kakade, π[1, :])
 
             # Compute preconditioner 
-            if λ == 0.
+            if β == 0.
                 G = kakadeConditioner(θ)
             else 
-                G = C_NPG_Gramian(θ, λ)
+                G = C_NPG_Gramian(θ, β)
             end
 
             # Compute update direction, step size and new parameter 
@@ -235,7 +235,7 @@ for λ in λs
         policyTrajectories_Kakade = policyTrajectories_Kakade'
 
         # Plot optimization trajectory 
-        p = plot(p, policyTrajectories_Kakade[:,1], policyTrajectories_Kakade[:,2], linewidth=5, legend=false, 
+        p = plot(p, policyTrajectories_Kakade[:,1], policyTrajectories_Kakade[:,2], linewidth=2, legend=false, 
             aspect_ratio=:equal, titlefontsize=title_fontsize, tickfontsize=tick_fontsize, 
             legendfontsize=legend_fontsize, guidefontsize=guide_fontsize, fontfamily="Computer Modern", size = (400, 400),
             framestyle=:box, xticks = 0:1:1, yticks = 0:1:1, xlims=(0,1), ylims=(0,1), # title = titles[i], 
@@ -245,6 +245,6 @@ for λ in λs
 
     # Plot safety boundary and export plot 
     p = contour!(x, y, cont, levels=[b], color=:black, linewidth=5, colorbar=false) 
-    save("graphics/C-NPG-trajectories-$λ.pdf", p)
+    save("graphics/C-NPG-trajectories-$β.pdf", p)
 
 end

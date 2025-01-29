@@ -6,15 +6,15 @@ import matplotlib as mpl
 
 
 ALGOS = [ 
-    "C-TRPO",
-    "CPO", 
-    "PCPO", 
-    "CPPO-PID", 
-    "PPO-Lag",
+    "C-TRPO (ours)",
     "TRPO-Lag",
-    "FOCOPS",
+    "CPPO-PID", 
+    "P3O", 
+    "PCPO", 
+    "CPO",
     "CUP",
-    "P3O",
+    "FOCOPS",
+    "PPO-Lag",
     "IPO",
 ]
 
@@ -123,15 +123,15 @@ def load_benchmark_data(load_ppo=True):
     
     algos = ALGOS + ["PPO"] if load_ppo else ALGOS  
     algos_replace = [
-        "c-trpo (ablation)",  # during ablation we noticed we did not use beta=1 in the benchmark
-        "cpo (benchmark)", 
-        "pcpo (benchmark)", 
-        "cppo_pid (benchmark)", 
-        "ppo_lag (benchmark)",
+        "c-trpo (ablation)",
         "trpo_lag (benchmark)",
-        "focops (benchmark)",
-        "cup (benchmark)",
+        "cppo_pid (benchmark)", 
         "p3o (benchmark)",
+        "pcpo (benchmark)", 
+        "cpo (benchmark)", 
+        "cup (benchmark)",
+        "focops (benchmark)",
+        "ppo_lag (benchmark)",
         "ipo (benchmark)",
     ]
     algos_replace = algos_replace + ["ppo (benchmark)"] if load_ppo else algos_replace  
