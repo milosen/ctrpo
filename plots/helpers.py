@@ -31,8 +31,8 @@ ENVS = (
 
 
 def get_df(
-    algo_subset=("c-trpo-entropy", "cpo"), 
-    experiments=("c-trpo_beta_1", "c-trpo_beta_0_5", "benchmark_array"), 
+    algo_subset=("cpo"), 
+    experiments=("benchmark"), 
     env_subset=None
 ):
     df = pd.DataFrame()
@@ -117,13 +117,13 @@ def plot_env(df, env, xmax=10e6, diagnostics=True, cost_ci=True,
 
 
 def load_benchmark_data(load_ppo=True):
-    df = get_df(algo_subset = ("c-trpo", "cpo", "pcpo", "cppo_pid", "ppo_lag", "trpo_lag", "focops", "cup", "p3o", "ipo", "ppo"),
+    df = get_df(algo_subset = ("c-trpo-hyst", "cpo", "pcpo", "cppo_pid", "ppo_lag", "trpo_lag", "focops", "cup", "p3o", "ipo", "ppo"),
             env_subset = ENVS,
             experiments = ("benchmark", "ablation"))
     
     algos = ALGOS + ["PPO"] if load_ppo else ALGOS  
     algos_replace = [
-        "c-trpo (ablation)",
+        "c-trpo-hyst (ablation)",
         "trpo_lag (benchmark)",
         "p3o (benchmark)",
         "pcpo (benchmark)", 

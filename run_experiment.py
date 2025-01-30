@@ -118,7 +118,7 @@ if __name__ == "__main__":
                 commands += [
                     " ".join(
                         [
-                            f"python ctrpo/algo/{algo}.py",
+                            f"python algo/{algo}.py",
                             "--task",
                             task,
                             "--seed",

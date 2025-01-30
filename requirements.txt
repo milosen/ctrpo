@@ -17,3 +17,4 @@ torch==2.0.1
 # for the notebooks
 ipykernel==6.29.5
 rliable==1.2.0 
+joblib==1.4.2
