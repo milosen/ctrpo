@@ -8,12 +8,12 @@ import matplotlib as mpl
 ALGOS = [ 
     "C-TRPO (ours)",
     "TRPO-Lag",
-    "CPPO-PID", 
     "P3O", 
     "PCPO", 
     "CPO",
     "CUP",
     "FOCOPS",
+    "CPPO-PID", 
     "PPO-Lag",
     "IPO",
 ]
@@ -125,12 +125,12 @@ def load_benchmark_data(load_ppo=True):
     algos_replace = [
         "c-trpo (ablation)",
         "trpo_lag (benchmark)",
-        "cppo_pid (benchmark)", 
         "p3o (benchmark)",
         "pcpo (benchmark)", 
         "cpo (benchmark)", 
         "cup (benchmark)",
         "focops (benchmark)",
+        "cppo_pid (benchmark)", 
         "ppo_lag (benchmark)",
         "ipo (benchmark)",
     ]
