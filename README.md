@@ -13,8 +13,6 @@ pip install -r requirements.txt
 ```
 
 ## Reproduce
-
-By default, the following script will run all algorithms on the full benchmark:
 ```bash
 python algorithms/c-trpo.py --task SafetyAntVelocity-v1
 ```
