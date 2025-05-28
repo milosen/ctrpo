@@ -23,21 +23,17 @@ from collections import deque
 from typing import Callable
 
 import numpy as np
-try: 
-    from isaacgym import gymutil
-except ImportError:
-    pass
 import torch
 import torch.nn as nn
 import torch.optim
 from torch.nn.utils.clip_grad import clip_grad_norm_
 from torch.utils.data import DataLoader, TensorDataset
 
-from common.buffer import VectorizedOnPolicyBuffer, discount_cumsum
-from common.env import make_sa_mujoco_env, make_sa_isaac_env
-from common.logger import EpochLogger
-from common.model import ActorVCritic
-from common.utils.config import single_agent_args, isaac_gym_map, parse_sim_params
+from baselines.common.buffer import VectorizedOnPolicyBuffer, discount_cumsum
+from baselines.common.env import make_sa_mujoco_env, make_sa_isaac_env
+from baselines.common.logger import EpochLogger
+from baselines.common.model import ActorVCritic
+from baselines.common.utils.config import single_agent_args, isaac_gym_map, parse_sim_params
 
 CONJUGATE_GRADIENT_ITERS=15
 TRPO_SEARCHING_STEPS=15
